@@ -1,4 +1,8 @@
 import { AiOutlineArrowUp } from "solid-icons/ai";
+import { FaBrandsGithub, FaBrandsLinkedin } from "solid-icons/fa";
+import { BiRegularGlobe } from "solid-icons/bi";
+import { FaSolidHeadphones } from "solid-icons/fa";
+import { RiMediaMusicFill } from "solid-icons/ri";
 import { createSignal } from "solid-js";
 import axios from "axios";
 import { z } from "zod";
@@ -41,9 +45,7 @@ const App = () => {
       (val) =>
         val.includes("youtube.com/watch?v=") ||
         val.includes("youtu.be/") ||
-        val.includes(
-          "https://youtube.com/shorts/"
-        ),
+        val.includes("https://youtube.com/shorts/"),
       {
         message: "Please enter a valid YouTube URL",
       }
@@ -103,14 +105,79 @@ const App = () => {
     <div class="relative w-full h-screen flex items-center justify-center flex-col gap-4 border-white border">
       <div class="bg-[url('/594.jpg')] absolute inset-0 bg-center bg-cover blur-lg brightness-100 -z-10"></div>
 
+      {/* App Logo/Brand */}
+      <div class="absolute top-6 left-6">
+        <div class="flex flex-col gap-1">
+          <div class="app-logo bg-gradient-to-r from-gray-800 to-gray-700 text-gray-200 p-2 px-4 rounded-lg shadow-lg flex items-center gap-2">
+            <div class="logo-icon-container relative">
+              <FaSolidHeadphones size={20} class="text-blue-400" />
+              <RiMediaMusicFill
+                size={12}
+                class="absolute -top-1 -right-1 text-red-400"
+              />
+            </div>
+            <div class="logo-text">
+              <span class="font-extrabold text-xl tracking-tight">
+                <span class="text-blue-400">Sound</span>
+                <span class="text-red-400">Tube</span>
+              </span>
+            </div>
+          </div>
+          <p class="text-xs text-gray-300 ml-1 font-light tracking-wide app-tagline">
+            Extract MP3 audio from any YouTube video in seconds
+          </p>
+        </div>
+      </div>
+
+      {/* Social Links */}
+      <div class="absolute top-6 right-6 flex gap-4">
+        <a
+          href="https://github.com/yourusername"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="GitHub"
+          class="social-icon github-icon bg-gray-800 text-gray-200 p-3 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-lg flex items-center justify-center"
+        >
+          <FaBrandsGithub size={22} />
+        </a>
+        <a
+          href="https://linkedin.com/in/yourusername"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="LinkedIn"
+          class="social-icon linkedin-icon bg-gray-800 text-gray-200 p-3 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-lg flex items-center justify-center"
+        >
+          <FaBrandsLinkedin size={22} />
+        </a>
+        <a
+          href="https://yourwebsite.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Personal Website"
+          class="social-icon website-icon bg-gray-800 text-gray-200 p-3 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-lg flex items-center justify-center"
+        >
+          <BiRegularGlobe size={22} />
+        </a>
+      </div>
+
+      {/* Main Headline */}
+      <div class="text-center mb-8 z-10 px-4 max-w-4xl">
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg">
+          YouTube to MP3 Converter
+        </h1>
+        <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto drop-shadow-md leading-relaxed">
+          Download high-quality audio from any YouTube video with just one click
+        </p>
+      </div>
+
       <div class="h-70 w-[90vw] md:w-[47vw] lg:[30vw] bg-gray-900 rounded-4xl flex flex-col items-center justify-center gap-4 p-3">
         <div class="w-[100%] h-[50%] rounded-t-4xl bg-gray-800 flex items-center justify-center flex-col gap-4">
           <h1 class="h-1/3 text-2xl text-gray-300 font-bold">
             Enter your Youtube url
           </h1>
-            <p class="text-gray-500 text-center">
+          <p class="text-gray-500 text-center">
             Paste a YouTube video URL to download its audio as MP3.
-            </p>
+          </p>
         </div>
 
         <div class="h-1/3 w-[100%] flex flex-col gap-2">
@@ -146,7 +213,7 @@ const App = () => {
         </div>
       </div>
       <div class="h-40">
-        {url()&& (
+        {url() && (
           <img
             src={getYoutubeThumbnail(url()) || undefined}
             alt=""
