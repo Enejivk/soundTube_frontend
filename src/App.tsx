@@ -8,12 +8,42 @@ const App = () => {
   const [error, setError] = createSignal("");
   const [loading, setLoading] = createSignal(false);
 
+  function getYoutubeThumbnail(url: string, quality = "hqdefault") {
+    try {
+      const parsedUrl = new URL(url);
+
+      // Case 1: youtu.be short link
+      if (parsedUrl.hostname === "youtu.be") {
+        const videoId = parsedUrl.pathname.slice(1);
+        return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
+      }
+
+      // Case 2: youtube.com/watch?v=ID
+      if (parsedUrl.searchParams.has("v")) {
+        const videoId = parsedUrl.searchParams.get("v");
+        return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
+      }
+
+      // Case 3: embed link
+      const paths = parsedUrl.pathname.split("/");
+      const videoId = paths[paths.length - 1];
+      return `https://img.youtube.com/vi/${videoId}/${quality}.jpg`;
+    } catch (e) {
+      console.error("Invalid YouTube URL:", url);
+      return null;
+    }
+  }
+
   const youtubeSchema = z
     .string()
     .url()
     .refine(
       (val) =>
-        val.includes("youtube.com/watch?v=") || val.includes("youtu.be/"),
+        val.includes("youtube.com/watch?v=") ||
+        val.includes("youtu.be/") ||
+        val.includes(
+          "https://youtube.com/shorts/"
+        ),
       {
         message: "Please enter a valid YouTube URL",
       }
@@ -25,6 +55,8 @@ const App = () => {
     if (!result.success) {
       setError(result.error.issues[0].message);
       return;
+    } else {
+      setError("");
     }
     setLoading(true);
     const formData = new FormData();
@@ -45,6 +77,7 @@ const App = () => {
       a.href = downloadUrl;
       a.download = "music.mp3";
       document.body.appendChild(a);
+
       a.click();
       a.remove();
     } catch (err) {
@@ -54,8 +87,20 @@ const App = () => {
     }
   };
 
+  const handleOnChange = (e: InputEvent) => {
+    const input = e.currentTarget as HTMLInputElement;
+    const value = input.value;
+    const result = youtubeSchema.safeParse(value);
+    if (!result.success) {
+      setError(result.error.issues[0].message);
+    } else {
+      setError("");
+    }
+    setUrl(value);
+  };
+
   return (
-    <div class="relative w-full h-screen flex items-center justify-center flex-col">
+    <div class="relative w-full h-screen flex items-center justify-center flex-col gap-4 border-white border">
       <div class="bg-[url('/594.jpg')] absolute inset-0 bg-center bg-cover blur-lg brightness-100 -z-10"></div>
 
       <div class="h-70 w-[90vw] md:w-[47vw] lg:[30vw] bg-gray-900 rounded-4xl flex flex-col items-center justify-center gap-4 p-3">
@@ -63,14 +108,14 @@ const App = () => {
           <h1 class="h-1/3 text-2xl text-gray-300 font-bold">
             Enter your Youtube url
           </h1>
-          <p class="text-gray-500">
-            
-          </p>
+            <p class="text-gray-500 text-center">
+            Paste a YouTube video URL to download its audio as MP3.
+            </p>
         </div>
 
         <div class="h-1/3 w-[100%] flex flex-col gap-2">
           <input
-            onInput={(e) => setUrl(e.currentTarget.value)}
+            oninput={handleOnChange}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleOnsubmit();
@@ -90,6 +135,9 @@ const App = () => {
         <div class="h-1/3 w-[100%] flex items-center justify-end">
           <button
             class="bg-gray-300 rounded-full p-4 hover:bg-gray-400 transition-all duration-300 ease-in-out flex items-center justify-center"
+            classList={{
+              "bg-gray-400 cursor-not-allowed opacity-50": loading() || !url(),
+            }}
             onclick={handleOnsubmit}
             disabled={loading()}
           >
@@ -97,8 +145,16 @@ const App = () => {
           </button>
         </div>
       </div>
-      <div class="h-30">
-        {!loading() && (
+      <div class="h-40">
+        {url()&& (
+          <img
+            src={getYoutubeThumbnail(url()) || undefined}
+            alt=""
+            class="h-full rounded"
+          />
+        )}
+
+        {loading() && (
           <div class="flex flex-col items-center justify-center w-full mt-4">
             <div class="flex gap-1 h-8 items-end">
               <div
@@ -122,7 +178,7 @@ const App = () => {
                 style="height: 60%"
               ></div>
             </div>
-            <span class="text-blue-300 text-xs mt-2 animate-pulse">
+            <span class="text-gray-900 text-xs mt-2 animate-pulse p">
               Preparing your music...
             </span>
           </div>
