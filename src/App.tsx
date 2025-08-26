@@ -1,6 +1,5 @@
 import { AiOutlineArrowUp } from "solid-icons/ai";
 import { FaBrandsGithub, FaBrandsLinkedin } from "solid-icons/fa";
-import { BiRegularGlobe } from "solid-icons/bi";
 import { FaSolidHeadphones } from "solid-icons/fa";
 import { RiMediaMusicFill } from "solid-icons/ri";
 import { createSignal } from "solid-js";
@@ -123,16 +122,13 @@ const App = () => {
               </span>
             </div>
           </div>
-          <p class="text-xs text-gray-300 ml-1 font-light tracking-wide app-tagline">
-            Extract MP3 audio from any YouTube video in seconds
-          </p>
         </div>
       </div>
 
       {/* Social Links */}
       <div class="absolute top-6 right-6 flex gap-4">
         <a
-          href="https://github.com/yourusername"
+          href="https://github.com/Enejivk/soundTube_backend.git"
           target="_blank"
           rel="noopener noreferrer"
           title="GitHub"
@@ -141,7 +137,7 @@ const App = () => {
           <FaBrandsGithub size={22} />
         </a>
         <a
-          href="https://linkedin.com/in/yourusername"
+          href="https://www.linkedin.com/in/enejivic/"
           target="_blank"
           rel="noopener noreferrer"
           title="LinkedIn"
@@ -149,20 +145,13 @@ const App = () => {
         >
           <FaBrandsLinkedin size={22} />
         </a>
-        <a
-          href="https://yourwebsite.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Personal Website"
-          class="social-icon website-icon bg-gray-800 text-gray-200 p-3 rounded-full hover:bg-gray-700 transition-all duration-300 shadow-lg flex items-center justify-center"
-        >
-          <BiRegularGlobe size={22} />
-        </a>
+       
       </div>
 
       {/* Main Headline */}
-      <div class="text-center mb-8 z-10 px-4 max-w-4xl">
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg">
+      <div class="text-center mb-8 z-10 px-4 max-w-4xl headline-container">
+        <div class="headline-overlay"></div>
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 drop-shadow-lg relative">
           YouTube to MP3 Converter
         </h1>
         <p class="text-lg md:text-xl text-gray-200 max-w-2xl mx-auto drop-shadow-md leading-relaxed">
