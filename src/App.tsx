@@ -50,6 +50,12 @@ const App = () => {
       }
     );
 
+    function getFilenameFromContentDisposition(headers: Record<string, any>): string | null {
+      const contentDisposition = headers["content-disposition"] || headers["Content-Disposition"];
+      if (!contentDisposition) return null;
+      const match = contentDisposition.match(/filename\*?=(?:UTF-8'')?["']?([^"';\n]+)["']?/i);
+      return match ? decodeURIComponent(match[1]) : null;
+    }
   const handleOnsubmit = async () => {
     setError("");
     const result = youtubeSchema.safeParse(url());
@@ -76,7 +82,7 @@ const App = () => {
       const downloadUrl = window.URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = downloadUrl;
-      a.download = "music.mp3";
+      a.download = getFilenameFromContentDisposition(response.headers) || "music.mp3";
       document.body.appendChild(a);
 
       a.click();
